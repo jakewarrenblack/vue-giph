@@ -1,19 +1,20 @@
 <template>
-  <div>
- 
-  </div>
+  <b-container>
+    <b-row>
+      <b-col>
+        <GiphyViewer/>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-import GiphyViewer from '@/components/GiphyViewer.vue'
+import GiphyViewer from '../components/GiphyViewer.vue'
 
 export default {
   name: 'App',
   components: {
-    // equivalent to 'GiphyViewer = GiphyViewer'
-    // js just instantiates this way
     GiphyViewer
- 
   }
 }
 </script>
