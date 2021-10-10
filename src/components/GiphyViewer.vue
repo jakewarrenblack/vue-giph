@@ -38,7 +38,7 @@
                 // eg {doThis; doThat; return something;}
                 .then((response) => {
                     console.log(response.data.data);
-                    this.gifs = response.data;
+                    this.gifs = response.data.data;
                 })
                 .catch(error => console.log(error))
         },

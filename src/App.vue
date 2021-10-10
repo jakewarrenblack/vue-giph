@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import GiphyViewer from '../components/GiphyViewer.vue'
+import GiphyViewer from './components/GiphyViewer.vue'
 
 export default {
   name: 'App',
