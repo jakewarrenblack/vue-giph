@@ -3,9 +3,9 @@
         <b-row no-gutters class="search-box" align-h="between">
             <input type="text" v-model="term" v-on:keyup.enter="searchGiphy()"/>
             <div>
-                <b-button mr-3 class="" variant="primary" @click="searchGiphy('search')">Search</b-button>
-                <b-button class="" variant="primary" @click="searchGiphy('trending')">Trending</b-button>
-                <b-button class="" variant="primary" @click="searchGiphy('random')">Random</b-button>
+                <b-button mr-3 class="" variant="primary" @click="genericSearch('search')">Search</b-button>
+                <b-button class="" variant="primary" @click="genericSearch('trending')">Trending</b-button>
+                <b-button class="" variant="primary" @click="genericSearch('random')">Random</b-button>
             </div>
             <div>
                 <b-dropdown v-model="limit" id="dropdown-1" text="Limit" class="m-md-2">
@@ -49,36 +49,12 @@
         },
         // mounted will occur before methods, convention is to put it before them in the code
         mounted(){
-            this.trendingSearch();
+            this.genericSearch('trending');
         },
-        methods: {   
-            // TODO: Combine into a generic search?
-            trendingSearch(){
-            //  this is called a 'chained' method
-                axios.get(`${GIPHY_URL}/trending?api_key=${API_KEY}`)
-                // nice to put 'response' within soft brackets, in case you might be adding a second parameter in the future
-                // wrapping the return of an arrow functon in curly braces means you can do things before returning anything
-                // eg {doThis; doThat; return something;}
-                .then((response) => {
-                    this.gifs = response.data.data;
-                })
-                .catch(error => console.log(error))
-            },  
-            randomSearch(){
-                this.gifs = [];
-                axios.get(`${GIPHY_URL}/random?api_key=${API_KEY}`)
-                .then((response) => {                 
-                    this.gifs = [response.data.data];
-                })
-                .catch(error => console.log(error))
-            },
-            searchGiphy(type){
-                console.log(type);
-                switch(type){
-                    case('search'):
-
-                    if(!this.term){
-                        // alert("Please enter a search term.");
+        methods: {
+            genericSearch(type){
+                if(type == 'search'){
+                        if(!this.term){
                         this.$bvToast.toast('Please enter a search term.', {
                             title: 'Warning',
                             variant: 'danger',
@@ -88,26 +64,15 @@
                         })
                         return;
                     }
-                    axios.get(`${GIPHY_URL}/search?api_key=${API_KEY}&q=${this.term}&limit=${this.selectedLimit}`)
-                    .then((response) => {
-                        this.gifs = response.data.data;
-                    })            
-                    this.term = "";
-                    break;
-
-                    case('trending'):
-                    this.trendingSearch();
-                    this.term = "";
-                    break;
-
-                    case('random'):
-                    this.randomSearch();
-                    break;
-
                 }
-                
-                
-            },
+                // 'something || 'do this' is the opposite of the ?? operator                 
+                axios.get(`${GIPHY_URL}/${type}?api_key=${API_KEY}${type == 'search' ? '&q=' + this.term : ''}${'&limit=' + this.selectedLimit}`)
+                .then((response) => {
+                    console.log(response)
+                    type == 'random' ? this.gifs = [response.data.data] : this.gifs = response.data.data;
+                })
+                .catch(error => console.log(error))
+            },   
         }
     }
 </script>
